@@ -14,8 +14,7 @@
 - PHP
 - BOOTSTRAP 5
 - CHART.JS (WYKRESY)
--
--
-- Autorzy
+
+# Autorzy
 - Backend/Server/Structure = Myszexx
 - Frontend = Mikołaj
