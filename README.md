@@ -15,5 +15,6 @@
 - BOOTSTRAP 5
 - CHART.JS (WYKRESY)
 
-Backend/Server/Structure = Myszexx
-Frontend = Mikołaj
+- Autorzy
+- Backend/Server/Structure = Myszexx
+- Frontend = Mikołaj
