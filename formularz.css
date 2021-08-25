@@ -1,0 +1,140 @@
+            /* MMFit */
+            
+            html {
+                transition: 0.1s;
+                overflow-x: hidden;
+            }
+            
+            body {
+                margin:0;
+            }
+              
+            .background1 {
+                z-index:1;
+                width:100vw;
+                background: linear-gradient(-45deg, #E73C7E,#762FDE, #dbdb2c,#2CDB35);
+                background-size: 300% 300%;
+                animation: gradient 10s ease infinite;
+                
+            }
+            
+            @keyframes gradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            .headerRow {
+
+                height:150px;
+
+            }
+
+            .spacer100 {
+
+                width:100vw;
+                height:100px;
+            }
+
+            .spacer200 {
+
+                width:100vw;
+                height:200px;
+
+            }
+            
+            .spacer300 {
+
+                width:100vw;
+                height:300px
+            }
+
+            .spacer500 {
+
+                width:100vw;
+                height:500px;
+            }
+            
+            .logo {
+                font-family: Anton;
+                font-style: normal;
+                font-size: 50px;
+                font-weight:bold;
+                display: flex;
+                align-items: center;
+                text-align: center;
+                color: #000000;
+                text-decoration: none;
+            }
+            
+            .navContainer {
+                position:absolute;
+                top:0vh; left:0vw;
+                margin:0;
+                padding:0;
+                width: 100vw;
+                height: 150px;
+                background: linear-gradient(180deg, #68B4DE 4.3%, rgba(104, 180, 222, 0) 133.22%);
+            }
+
+            .logout-link {
+
+                float:left;
+                align-self:center;
+            }
+            
+            form {
+                z-index: 10;
+            }
+            
+            .form-control {
+                margin: auto;
+                background-color: rgb(209, 208, 208);
+                border: none;
+                border-radius: 15px;
+            }
+            
+            .log-btn {
+                background: linear-gradient(282.89deg, #8BEE68 -10.78%, rgba(139, 238, 104, 0) 126.32%);
+                filter: drop-shadow(8px 8px 4px rgba(0, 0, 0, 0.50));
+                border-radius: 20px;
+                margin: auto;
+                border: none;
+                justify-content: center;
+            }
+
+            .white_line {
+
+                background-color:white;
+                height:3px;
+                border-radius:1px;
+                
+                }
+            
+            .card {
+
+                    border-radius:1vw;
+                    box-shadow: 8px 8px 24px 5px #000000;
+              }
+
+            .cardcol {
+
+                padding:1vw;
+                display:flex;
+                justify-content:center;
+                align-content:center;   
+          }
+
+          .Col_trening {
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+          }
+        

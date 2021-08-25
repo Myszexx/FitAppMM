@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.login {
+    text-align: right;
+    height: 150px;
+    width: 100vw;
+}
