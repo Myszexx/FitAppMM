@@ -83,123 +83,90 @@
 
 <?php else: ?>
 
-<?php
+     <?php
 
-if(!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password'])) {
+     require 'config.php';
+     require 'class.user.php';
 
- $username = preg_replace('/[^\p{L}\p{N}]/iu', '', $_POST['username']);
- $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
- $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
- $ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
- 
- if(strlen($_POST['username']) >= 3) {
- 
-  if(strlen($_POST['username']) <= 30) {
-  
-   if(strlen($_POST['email']) >= 6) {
-   
-    if(strlen($_POST['email']) <= 30) {
-    
-     if(strlen($_POST['password']) >= 6) {
-     
-      if(strlen($_POST['password']) <= 16) {
-      
-       if(hash_equals($_POST['password'], $_POST['repeated_password'])) {
-       
-        require 'config.php';
-        require 'class.user.php';
-        
-        $user = new User($dbh);
-        
-        if(!$user->user_exist($username, $email)) {
-        
-         if($user->insert_user($username, $email, $password, $ip)) {
-         
-          echo '<p>Konto zostało założone.</p>';
-          sleep (2);
-          header('Location: login.php');
-  
-          exit;
-          
+     function validateRegistrationInput($username, $email, $password, $repeatedPassword) {
+         if (empty($username) || empty($email) || empty($password) || empty($repeatedPassword)) {
+             echo '<p>Wypełnij wszystkie pola, aby się zarejestrować.</p>';
+             return false;
          }
-         
-         else {
-         
-          echo '<p>Nie udało się zarejestrować.</p>';
+
+         if (strlen($username) < 3) {
+             echo '<p>Nazwa użytkownika jest zbyt krótka.</p>';
+             return false;
          }
-         
-        }
-        
-        else {
-        
-         echo '<p>Taki użytkownik już istnieje.</p>';
-         
-        }
-        
-       }
-       
-       else {
-       
-        echo '<p>Hasła się nie zgadzają.</p>';
-        
-       }
-       
-      }
-      
-      else {
-      
-       echo '<p>Hasło jest zbyt długie.</p>';
-       
-      }
-      
+
+         if (strlen($username) > 30) {
+             echo '<p>Nazwa użytkownika jest zbyt długa.</p>';
+             return false;
+         }
+
+         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+             echo '<p>Podany adres e-mail jest nieprawidłowy.</p>';
+             return false;
+         }
+
+         if (strlen($email) < 6) {
+             echo '<p>E-mail jest zbyt krótki.</p>';
+             return false;
+         }
+
+         if (strlen($email) > 30) {
+             echo '<p>E-mail jest zbyt długi.</p>';
+             return false;
+         }
+
+         if (strlen($password) < 6) {
+             echo '<p>Hasło jest zbyt krótkie.</p>';
+             return false;
+         }
+
+         if (strlen($password) > 16) {
+             echo '<p>Hasło jest zbyt długie.</p>';
+             return false;
+         }
+
+         if (!hash_equals($password, $repeatedPassword)) {
+             echo '<p>Hasła się nie zgadzają.</p>';
+             return false;
+         }
+
+         return true;
      }
-     
-     else {
-     
-      echo '<p>Hasło jest zbyt krótkie.</p>';
-      
+
+     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         $username = preg_replace('/[^\p{L}\p{N}]/iu', '', $_POST['username']);
+         $email = $_POST['email'];
+         $password = $_POST['password'];
+         $repeatedPassword = $_POST['repeated_password'];
+         $ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+
+         if (!validateRegistrationInput($username, $email, $password, $repeatedPassword)) {
+             return;
+         }
+
+         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+         $user = new User($dbh);
+
+         if ($user->user_exist($username, $email)) {
+             echo '<p>Taki użytkownik już istnieje.</p>';
+             return;
+         }
+
+         if ($user->insert_user($username, $email, $hashedPassword, $ip)) {
+             echo '<p>Konto zostało założone.</p>';
+             sleep(2);
+             header('Location: login.php');
+             exit;
+         } else {
+             echo '<p>Nie udało się zarejestrować.</p>';
+         }
      }
-     
-    }
-    
-    else {
-    
-     echo '<p>E-mail jest zbyt długi.</p>';
-     
-    }
-    
-   }
-   
-   else {
-   
-    echo '<p>E-mail jest zbyt krótki.</p>';
-    
-   }
-   
-  }
-  
-  else {
-  
-   echo '<p>Nazwa użytkownika jest zbyt długa.</p>';
-   
-  }
-  
- }
- 
- else {
- 
-  echo '<p>Nazwa użytkownika jest zbyt krótka.</p>';
-  
- }
- 
-}
 
-else {
+     ?>
 
- echo '<p>Wypełnij wszystkie pola, aby się zarejestrować.</p>';
- 
-}
-
-?>
 
 <?php endif; ?>

@@ -9,11 +9,8 @@
   exit;
   
  }
- $one = false;
- $two = false;
- $three = false;
+
  $jest = false;
- $more = false;
  $id = $_SESSION['user_id'];
  $conn = new mysqli("localhost","root","0vIGVk1lw3qv", "mmfit");
  if ($conn->connect_error) {
@@ -47,10 +44,6 @@ $paths = [];
 $exts = [];
 $names = [];
  if ($rezult->num_rows > 0){
- if ($rezult->num_rows == 1) {$one = true;} 
- if ($rezult->num_rows == 2) {$two = true;} 
- if ($rezult->num_rows == 3) {$three = true;} 
- if ($rezult->num_rows > 3) {$more = true;} 
   while($ruw = $rezult->fetch_assoc()) {
     array_push($paths, $ruw["filePath"]);
     array_push($exts, $ruw["fileExt"]);

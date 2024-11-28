@@ -74,103 +74,87 @@
 
 <?php else: ?>
 
-<?php
+     <?php
 
- if(!empty($_POST['username']) && !empty($_POST['password'])) {
- 
-  if(strlen($_POST['username']) >= 3) {
-  
-   if(strlen($_POST['username']) <= 30) {
-   
-    if(strlen($_POST['password']) >= 6) {
-    
-     if(strlen($_POST['password']) <= 16) {
-     
-      require 'config.php';
-      require 'class.user.php';
-      
-      $username = preg_replace('/[^\p{L}\p{N}]/iu', '', $_POST['username']);
-      
-      $user = new User($dbh);
-      
-      if($user->login($username, $_POST['password'])) {
-      
-       session_start();
-       $servername = "localhost";
-$usernamee = "root";
-$password = "0vIGVk1lw3qv";
-$dbname = "mmfit";
-       $conn = mysqli_connect($servername, $usernamee, $password, $dbname);
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
+     require 'config.php';
+     require 'class.user.php';
 
-      $sql = "SELECT id FROM users WHERE username='".$username."'";
+     function validateInput($username, $password) {
+         if (empty($username) || empty($password)) {
+             echo '<p>Wypełnij wszystkie pola, aby się zalogować.</p>';
+             return false;
+         }
 
-      $result = mysqli_query($conn, $sql);
+         if (strlen($username) < 3) {
+             echo '<p>Nazwa użytkownika jest zbyt krótka.</p>';
+             return false;
+         }
 
-      if (mysqli_num_rows($result) > 0) {
-        while($row = $result->fetch_assoc()) {
-          $users_id = $row["id"];
-      }
-    }
+         if (strlen($username) > 30) {
+             echo '<p>Nazwa użytkownika jest zbyt długa.</p>';
+             return false;
+         }
 
-       $_SESSION['logged'] = 1;
-       $_SESSION['username'] = $username;
-       $_SESSION['user_id'] = $users_id;
-       
-       header('Location: home.php');
-       
-       exit;
-       
-      }
-      
-      else {
-      
-       echo '<p>Błędne dane logowania.</p>';
-       
-      }
-      
+         if (strlen($password) < 6) {
+             echo '<p>Hasło jest zbyt krótkie.</p>';
+             return false;
+         }
+
+         if (strlen($password) > 16) {
+             echo '<p>Hasło jest zbyt długie.</p>';
+             return false;
+         }
+
+         return true;
      }
-     
-     else {
-     
-      echo '<p>Hasło jest zbyt długie.</p>';
-      
+
+     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         $username = preg_replace('/[^\p{L}\p{N}]/iu', '', $_POST['username']);
+         $password = $_POST['password'];
+
+         if (!validateInput($username, $password)) {
+             return;
+         }
+
+         $user = new User($dbh);
+
+         if ($user->login($username, $password)) {
+             session_start();
+
+             $servername = "localhost";
+             $usernamee = "root";
+             $password = "0vIGVk1lw3qv";
+             $dbname = "mmfit";
+
+             $conn = mysqli_connect($servername, $usernamee, $password, $dbname);
+
+             if ($conn->connect_error) {
+                 die("Connection failed: " . $conn->connect_error);
+             }
+
+             $sql = "SELECT id FROM users WHERE username='" . mysqli_real_escape_string($conn, $username) . "'";
+             $result = mysqli_query($conn, $sql);
+
+             if ($result && mysqli_num_rows($result) > 0) {
+                 $row = mysqli_fetch_assoc($result);
+                 $users_id = $row["id"];
+             } else {
+                 echo '<p>Błąd podczas pobierania ID użytkownika.</p>';
+                 return;
+             }
+
+             $_SESSION['logged'] = 1;
+             $_SESSION['username'] = $username;
+             $_SESSION['user_id'] = $users_id;
+
+             header('Location: home.php');
+             exit;
+         } else {
+             echo '<p>Błędne dane logowania.</p>';
+         }
      }
-     
-    }
-    
-    else {
-    
-     echo '<p>Hasło jest zbyt krótkie.</p>';
-     
-    }
-    
-   }
-   
-   else {
-   
-    echo '<p>Nazwa użytkownika jest zbyt długa.</p>';
-    
-   }
-   
-  }
-  
-  else {
-  
-   echo '<p>Nazwa użytkownika jest zbyt krótka.</p>';
-   
-  }
-  
- }
- 
- else {
- 
-  echo '<p>Wypełnij wszystkie pola, aby się zalogować.</p>';
-  
- }
- 
-?>
+
+     ?>
+
 
 <?php endif; ?>
